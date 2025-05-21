@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Write to file
-    fprintf(file, "%s", argv[2]);
+    fprintf(file, "%s\n", argv[2]);
     syslog(LOG_DEBUG, "Writing %s to %s\n", argv[2], argv[1]);
 
     // Close file
