@@ -1,8 +1,8 @@
 CROSS_COMPILE ?= 
-DIR := /home/allenb24/Desktop/GitHub/assignment-2-allenb24
+DIR := /home/allenb24/Desktop/GitHub/assignment-2-allenb24/finder-app
 
-finder-app/writer : finder-app/writer.c
+writer : writer.c
 	$(CROSS_COMPILE)gcc $^ -o $@
 
 clean:
-	rm -f finder-app/writer finder-app/*.o
+	rm -f writer *.o
