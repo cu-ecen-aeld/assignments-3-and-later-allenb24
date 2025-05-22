@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Open file
-    FILE* file = fopen(argv[1], "r+");
+    FILE* file = fopen(argv[1], "w+");
     if (file == NULL) {
         syslog(LOG_ERR, "Error: Unable to open %s\n", argv[1]);    // Print error-level messages
         fprintf(stderr, "ERROR: Unable to open %s\n", argv[1]);
