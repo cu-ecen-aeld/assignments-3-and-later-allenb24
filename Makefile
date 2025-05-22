@@ -5,4 +5,4 @@ finder-app/writer : finder-app/writer.c
 	$(CROSS_COMPILE)gcc $^ -o $@
 
 clean:
-	rm -f finder-app/writer *.o
+	rm -f finder-app/writer finder-app/*.o
