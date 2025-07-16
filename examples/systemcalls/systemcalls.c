@@ -64,6 +64,35 @@ bool do_exec(int count, ...)
  *
 */
 
+    pid_t pid = fork();	// Get fork pid
+    
+    // If fork fails, exit
+    if (pid < 0) {
+	    fprintf(stderr, "fork() FAILED at line %d: ", __LINE__);
+	    perror("");	// Print the error message from errno
+	    exit(1);
+    }
+
+    // If child
+    if (pid == 0) {
+	    execv(command[0], args);	// Run execv with path and command
+	    
+	    // If exec returns, means it failed if we got this far
+	    fprintf(stderr, "execv() FAILED at line %d: ", __LINE__);
+	    perror("");
+	    exit(1);
+    }
+
+    // If parent
+    else {
+	    int status;
+	    wait(&status);
+
+	    if (WIFEXITED(status)) {
+		    printf("Child exit status: %d\n", WEXITSTATUS(status));
+	    }
+    }
+
     va_end(args);
 
     return true;
