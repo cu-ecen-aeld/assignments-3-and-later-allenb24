@@ -23,11 +23,13 @@ bool do_system(const char *cmd)
 */
     int status = system(cmd);
 
-    if (WIFEXITED(status)) {
+    if (status == -1) { return false; }
+
+    else if (WIFEXITED(status)) {
 	    printf("Exit code: %d\n", WEXITSTATUS(status));
-	    return false;
+	    return WEXITSTATUS(status) == 0;
     }
-    return true;
+    else { return false; }
 }
 
 /**
@@ -136,7 +138,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
 
     // Open file to write to
     int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
-    if (fd < 0) { fprintf(stderr, "ERROR: Couldn't open file\n"); } exit(1);
+    if (fd < 0) { fprintf(stderr, "ERROR: Couldn't open file\n"); exit(1); }
 
     switch(pid = fork()) {
 	    case -1: fprintf(stderr, "fork FAILED\n"); exit(1);
@@ -146,7 +148,8 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
 		     execv(command[0], command);
 		     fprintf(stderr, "execv() FAILED\n");
 		     exit(1);
-	    default: close(fd);
+	    default: 
+		     close(fd);
     }
 
     va_end(args);
