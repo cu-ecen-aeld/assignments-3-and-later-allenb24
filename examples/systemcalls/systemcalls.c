@@ -96,8 +96,14 @@ bool do_exec(int count, ...)
 	    wait(&status);
 
 	    if (WIFEXITED(status)) {
-		    printf("Child exit status: %d\n", WEXITSTATUS(status));
+		    int exit_code = WEXITSTATUS(status);
+		    printf("Child exit status: %d\n", exit_code);
+		    return exit_code == 0;
 	    }
+	    else {
+		    return false;
+	    }
+
     }
 
     va_end(args);
@@ -143,13 +149,20 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     switch(pid = fork()) {
 	    case -1: fprintf(stderr, "fork FAILED\n"); exit(1);
             case 0:
-		     if (dup2(fd, 1) < 0) { fprintf(stderr, "dup2 FAILED\n"); } exit(1);
+		     if (dup2(fd, 1) < 0) { fprintf(stderr, "dup2 FAILED\n"); exit(1); }
 		     close(fd);
 		     execv(command[0], command);
 		     fprintf(stderr, "execv() FAILED\n");
 		     exit(1);
 	    default: 
 		     close(fd);
+		     int status;
+		     wait(&status);
+
+		     if (WIFEXITED(status)) {
+			     return WEXITSTATUS(status) == 0;
+		     }
+		     else { return false; }
     }
 
     va_end(args);
